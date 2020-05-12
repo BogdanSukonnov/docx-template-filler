@@ -1,0 +1,5 @@
+quarkus:
+  http:
+    port: 38080
+templates:
+  path: C:\Projects\quarkus\docx-template-filler\templates
