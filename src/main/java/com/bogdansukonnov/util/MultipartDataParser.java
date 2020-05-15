@@ -1,5 +1,6 @@
 package com.bogdansukonnov.util;
 
+import com.bogdansukonnov.model.RequestMultipartData;
 import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
@@ -12,7 +13,7 @@ import java.io.InputStream;
 @ApplicationScoped
 public class MultipartDataParser {
 
-    public MultipartData parseMultipartData(MultipartFormDataInput input, String fileParam) throws IOException {
+    public RequestMultipartData parseMultipartData(MultipartFormDataInput input, String fileParam) throws IOException {
 
         InputPart inputPart = null;
 
@@ -27,7 +28,7 @@ public class MultipartDataParser {
 
         String fileName = getFileName(inputPart.getHeaders());
 
-        return new MultipartData(bytes, fileName);
+        return new RequestMultipartData(bytes, fileName);
 
     }
 

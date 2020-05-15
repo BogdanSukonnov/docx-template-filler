@@ -1,10 +1,10 @@
-package com.bogdansukonnov.util;
+package com.bogdansukonnov.model;
 
 import lombok.Data;
 import lombok.NonNull;
 
 @Data
-public class MultipartData {
+public class RequestMultipartData {
 
     @NonNull
     private final byte[] bytes;

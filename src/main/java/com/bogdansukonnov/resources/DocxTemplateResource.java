@@ -1,7 +1,7 @@
 package com.bogdansukonnov.resources;
 
+import com.bogdansukonnov.model.RequestMultipartData;
 import com.bogdansukonnov.service.FileService;
-import com.bogdansukonnov.util.MultipartData;
 import com.bogdansukonnov.util.MultipartDataParser;
 import lombok.AllArgsConstructor;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
@@ -28,10 +28,10 @@ public class DocxTemplateResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public String saveTemplate(MultipartFormDataInput input) throws IOException {
 
-        MultipartData multipartData = multipartDataParser.parseMultipartData(input, FILE_PARAM);
+        RequestMultipartData requestMultipartData = multipartDataParser.parseMultipartData(input, FILE_PARAM);
 
-        fileService.writeFile(multipartData.getBytes(), multipartData.getFileName());
+        fileService.writeFile(requestMultipartData.getBytes(), requestMultipartData.getFileName());
 
-        return String.format("%s saved", multipartData.getFileName());
+        return String.format("%s saved", requestMultipartData.getFileName());
     }
 }
