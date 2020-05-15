@@ -30,6 +30,7 @@ public class ZipService {
                         zipOut.write(bytes, 0, length);
                     }
                 }
+                Files.delete(new File(zipMapEntry.getKey()).toPath());
             }
         }
         return zippedFile;

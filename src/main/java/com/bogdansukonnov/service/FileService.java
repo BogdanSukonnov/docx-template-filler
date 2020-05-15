@@ -50,6 +50,8 @@ public class FileService {
 
         Map<String, String> zipMap = zipService.unzip(copiedTemplate);
 
+        Files.delete(copiedTemplate.toPath());
+
         File filledFile = zipService.zipFile(zipMap);
 
         String fileName = "filled.template.docx";
