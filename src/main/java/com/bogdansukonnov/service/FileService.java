@@ -6,9 +6,12 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.core.StreamingOutput;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Map;
@@ -16,11 +19,28 @@ import java.util.Map;
 @ApplicationScoped
 public class FileService {
 
+    public static final int BUFFER_SIZE = 1024;
+
     @ConfigProperty(name = "templates.path")
     String templatesPath;
 
     @Inject
     ZipService zipService;
+
+    public StreamingOutput getStreamingOutput(File file) {
+        return outputStream -> {
+            try (InputStream fis = new FileInputStream(file)) {
+                byte[] bytes = new byte[BUFFER_SIZE];
+                int length;
+                while ((length = fis.read(bytes)) >= 0) {
+                    outputStream.write(bytes, 0, length);
+                }
+            } finally {
+                // clean up temp file
+                Files.delete(file.toPath());
+            }
+        };
+    }
 
     public void writeFile(byte[] content, String filename) throws IOException {
 
