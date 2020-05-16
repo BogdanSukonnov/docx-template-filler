@@ -11,6 +11,10 @@ public class FillData {
 
     private List<Variable> variables;
 
+    private String openingTag;
+
+    private String closingTag;
+
     @Data
     public static class Variable {
 

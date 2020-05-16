@@ -10,9 +10,12 @@ import javax.ws.rs.core.StreamingOutput;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Map;
 
@@ -72,11 +75,34 @@ public class FileService {
 
         Files.delete(copiedTemplate.toPath());
 
+        replaceVariables(data, zipMap);
+
         File filledFile = zipService.zipFile(zipMap);
 
         String fileName = "filled.template.docx";
 
         return new ResponseFileData(filledFile, fileName);
+    }
+
+    private void replaceVariables(FillData data, Map<String, String> zipMap) throws IOException {
+        String multiplier = "[^\\" + data.getClosingTag() + "]*?";
+
+        for (Map.Entry<String, String> fileEntry : zipMap.entrySet()) {
+            String filePath = fileEntry.getKey();
+            String content = new String(Files.readAllBytes(Paths.get(filePath)), StandardCharsets.UTF_8);
+            for (FillData.Variable variable : data.getVariables()) {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append("\\").append(data.getOpeningTag()).append(multiplier);
+                for (char ch : variable.getName().toCharArray()) {
+                    stringBuilder.append(ch).append(multiplier);
+                }
+                stringBuilder.append("\\").append(data.getClosingTag());
+                content = content.replaceAll(stringBuilder.toString(), variable.getValue());
+            }
+            try (FileWriter fileWriter = new FileWriter(filePath)) {
+                fileWriter.write(content);
+            }
+        }
     }
 
     private File copyToTemp(File template) throws IOException {
