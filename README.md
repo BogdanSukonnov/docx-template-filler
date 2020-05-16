@@ -4,11 +4,29 @@ This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
+## Settings
+
+Default port is 38038. You can change port in application.yaml.
+
 ## Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
 ```
 ./mvnw quarkus:dev
+```
+
+## OpenAPI
+
+You can check API documentation using:
+```
+http://localhost:38080/openapi
+```
+
+## Swagger UI
+
+Swagger UI in dev mode:
+```
+http://localhost:38080/swagger-ui/
 ```
 
 ## Packaging and running the application
