@@ -7,8 +7,6 @@ import java.util.List;
 @Data
 public class FillData {
 
-    private String template;
-
     private List<Variable> variables;
 
     private String openingTag;

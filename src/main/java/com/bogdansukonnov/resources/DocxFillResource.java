@@ -12,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import java.io.File;
 import java.io.IOException;
 
 @Path("/docx-fill")
@@ -24,7 +25,7 @@ public class DocxFillResource {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response fillTemplate(FillData data) throws IOException {
-        ResponseFileData responseFileData = fileService.fillTemplate(data);
+        ResponseFileData responseFileData = fileService.fillTemplate(data, new File(""));
         StreamingOutput stream = fileService.getStreamingOutput(responseFileData.getFile());
         Response.ResponseBuilder response = Response.ok(stream);
         response.header("Content-Disposition", "attachment; filename=" + responseFileData.getFileName());

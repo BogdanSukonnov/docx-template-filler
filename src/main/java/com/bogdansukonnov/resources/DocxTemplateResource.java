@@ -1,6 +1,6 @@
 package com.bogdansukonnov.resources;
 
-import com.bogdansukonnov.model.RequestMultipartData;
+import com.bogdansukonnov.model.RequestData;
 import com.bogdansukonnov.service.FileService;
 import com.bogdansukonnov.util.MultipartDataParser;
 import lombok.AllArgsConstructor;
@@ -23,15 +23,17 @@ public class DocxTemplateResource {
 
     private static final String FILE_PARAM = "file";
 
+    private static final String FILL_DATA_PARAM = "fillData";
+
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public String saveTemplate(MultipartFormDataInput input) throws IOException {
 
-        RequestMultipartData requestMultipartData = multipartDataParser.parseMultipartData(input, FILE_PARAM);
+        RequestData requestData = multipartDataParser.parseMultipartData(input, FILE_PARAM, FILL_DATA_PARAM);
 
-        fileService.writeFile(requestMultipartData.getBytes(), requestMultipartData.getFileName());
+        fileService.writeFile(requestData.getBytes(), requestData.getFileName());
 
-        return String.format("%s saved", requestMultipartData.getFileName());
+        return String.format("%s saved", requestData.getFileName());
     }
 }

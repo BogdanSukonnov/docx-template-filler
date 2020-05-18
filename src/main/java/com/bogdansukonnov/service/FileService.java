@@ -61,13 +61,7 @@ public class FileService {
         }
     }
 
-    public ResponseFileData fillTemplate(FillData data) throws IOException {
-
-        File template = getTemplateFile(data.getTemplate());
-
-        if (!template.exists()) {
-            throw new IllegalArgumentException("Don't have template: " + data.getTemplate());
-        }
+    public ResponseFileData fillTemplate(FillData data, File template) throws IOException {
 
         File copiedTemplate = copyToTemp(template);
 
