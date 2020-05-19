@@ -10,7 +10,7 @@ public class RequestData {
     private final byte[] bytes;
 
     @NonNull
-    private final String fileName;
+    private final String templateFilename;
 
     @NonNull
     private final FillData fillData;

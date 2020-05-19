@@ -16,37 +16,42 @@ import java.io.InputStream;
 @ApplicationScoped
 public class MultipartDataParser {
 
-    public RequestData parseMultipartData(MultipartFormDataInput input, String fileParam, String fillDataParam) throws IOException {
+
+    public RequestData parseMultipartData(MultipartFormDataInput input, String templateFileParam, String fillDataParam) throws IOException {
         // parse file
-        InputPart filePart = getInputPart(fileParam, "template", input);
+        InputPart filePart = getInputPart(templateFileParam, "template", input);
 
         InputStream fileInputStream = filePart.getBody(InputStream.class, null);
         byte[] fileBytes = IOUtils.toByteArray(fileInputStream);
 
-        String fileName = getFileName(filePart.getHeaders());
+        String templateFileName = getFileName(filePart.getHeaders());
 
-        // parse fill data
-        InputPart fillDataPart = getInputPart(fillDataParam, "fillData", input);
+        FillData fillData = getFillData(fillDataParam, input);
+
+        return new RequestData(fileBytes, templateFileName, fillData);
+
+    }
+
+
+    private FillData getFillData(String fillDataParam, MultipartFormDataInput input) throws IOException {
+
+        InputPart fillDataPart = getInputPart(fillDataParam, fillDataParam, input);
 
         String fillDataString = fillDataPart.getBodyAsString();
 
-        FillData fillData = getFillData(fillDataString);
-
-        return new RequestData(fileBytes, fileName, fillData);
-
+        return deserializeFillData(fillDataString);
     }
 
-    public FillData getFillData(String fillDataString) {
-        FillData fillData = null;
-        try {
-            try (Jsonb jsonb = JsonbBuilder.create()) {
-                fillData = jsonb.fromJson(fillDataString, FillData.class);
-            }
+
+    public FillData deserializeFillData(String fillDataString) {
+
+        try (Jsonb jsonb = JsonbBuilder.create()) {
+            return jsonb.fromJson(fillDataString, FillData.class);
         } catch (Exception e) {
             throw new IllegalArgumentException("wrong fillData format");
         }
-        return fillData;
     }
+
 
     private InputPart getInputPart(String fileParam, String paramDescription, MultipartFormDataInput input) {
         InputPart filePart;
@@ -58,9 +63,6 @@ public class MultipartDataParser {
         return filePart;
     }
 
-    private FillData getFillData() {
-        return null;
-    }
 
     private String getFileName(MultivaluedMap<String, String> header) {
 

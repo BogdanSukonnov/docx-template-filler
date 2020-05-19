@@ -1,6 +1,7 @@
 package com.bogdansukonnov.service;
 
 import com.bogdansukonnov.model.FillData;
+import com.bogdansukonnov.model.RequestData;
 import com.bogdansukonnov.model.ResponseFileData;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -16,7 +17,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Map;
 
 @ApplicationScoped
@@ -61,21 +61,24 @@ public class FileService {
         }
     }
 
-    public ResponseFileData fillTemplate(FillData data, File template) throws IOException {
+    public ResponseFileData fillTemplate(RequestData requestData) throws IOException {
 
-        File copiedTemplate = copyToTemp(template);
+        File copiedTemplate = saveToTemp(requestData.getBytes());
 
         Map<String, String> zipMap = zipService.unzip(copiedTemplate);
 
         Files.delete(copiedTemplate.toPath());
 
-        replaceVariables(data, zipMap);
+        replaceVariables(requestData.getFillData(), zipMap);
 
         File filledFile = zipService.zipFile(zipMap);
 
-        String fileName = "filled.template.docx";
+        String responseFilename = requestData.getFillData().getResultFilename();
+        if (responseFilename == null) {
+            responseFilename = "filled" + requestData.getTemplateFilename();
+        }
 
-        return new ResponseFileData(filledFile, fileName);
+        return new ResponseFileData(filledFile, responseFilename);
     }
 
     private void replaceVariables(FillData data, Map<String, String> zipMap) throws IOException {
@@ -99,9 +102,11 @@ public class FileService {
         }
     }
 
-    private File copyToTemp(File template) throws IOException {
+    private File saveToTemp(byte[] bytes) throws IOException {
         File tempFile = File.createTempFile("toFill", ".docx");
-        Files.copy(template.toPath(), tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        try (FileOutputStream stream = new FileOutputStream(tempFile)) {
+            stream.write(bytes);
+        }
         return tempFile;
     }
 

@@ -1,8 +1,41 @@
 # docx-template-filler project
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Web service to fill "variables" in .docx file with given values. Variable here is a text between the given symbols.
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+## API
+
+Endpoint: `http://localhost:38080/fill`
+
+Response Content-Type: `application/octet-stream`
+
+Request Content-Type: `multipart/form-data`
+
+Request Body:
+
+| Part        | Type           | Description            |
+| ------------- |-------------| ---------------------|
+| template      | .docx | file to fill |
+| fillData     | String | JSON data * |
+
+*fillData exsample:
+```
+{
+	"variables": [
+		{
+			"name": "number",
+			"value": "707"
+		},
+		{
+			"name": "date",
+			"value": "12.09.2003"
+		}
+	],
+	"openingTag": "{",
+	"closingTag": "}",
+	"resultFilename": "invoice 707 12.09.2003.docx"
+}
+```
+`resultFilename` is optional in fillData. The default response filename is "filled" + template filename. 
 
 ## Settings
 
@@ -10,23 +43,15 @@ Default port is 38038. You can change port in application.yaml.
 
 ## Running the application in dev mode
 
+This project uses Quarkus.
+
 You can run your application in dev mode that enables live coding using:
 ```
 ./mvnw quarkus:dev
 ```
-
-## OpenAPI
-
-You can check API documentation using:
+on Windows:
 ```
-http://localhost:38080/openapi
-```
-
-## Swagger UI
-
-Swagger UI in dev mode:
-```
-http://localhost:38080/swagger-ui/
+mvnw quarkus:dev
 ```
 
 ## Packaging and running the application
