@@ -39,7 +39,7 @@ Request Body:
 
 ## Settings
 
-Default port is 38038. You can change port in application.yaml.
+Default port is 38038. You can change port in application.yaml or with env variable `quarkus.http.port`
 
 ## Running the application in dev mode
 
