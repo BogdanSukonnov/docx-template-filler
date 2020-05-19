@@ -1,4 +1,4 @@
-# docx-template-filler project
+# docx-template-filler
 
 Web service to fill "variables" in .docx file with given values. Variable here is a text between the given symbols.
 
@@ -12,12 +12,22 @@ Request Content-Type: `multipart/form-data`
 
 Request Body:
 
-| Part        | Type           | Description            |
+|         | Type           | Description            |
 | ------------- |-------------| ---------------------|
-| template      | .docx | file to fill |
-| fillData     | String | JSON data * |
+| `template`     | .docx | file to fill |
+| `fillData`     | String | JSON data * |
 
-*fillData exsample:
+*fillData JSON:
+
+| Field        | Type           | Description            |
+| ------------- |-------------| ---------------------|
+| `variables`      | array of JSON variable objects** | filds names and values |
+| `openingTag`     | String, length = 1 | symbol, that mark the beginning of field to fill with value |
+| `closingTag`     | String, length = 1 | symbol, that mark the end of field to fill with value |
+| `resultFilename`     | String, optional | name of the resulting file. The default response filename is "filled" + template filename. |
+
+example:
+
 ```
 {
 	"variables": [
@@ -35,11 +45,10 @@ Request Body:
 	"resultFilename": "invoice 707 12.09.2003.docx"
 }
 ```
-`resultFilename` is optional in fillData. The default response filename is "filled" + template filename. 
 
 ## Settings
 
-Default port is 38038. You can change port in application.yaml or with env variable `quarkus.http.port`
+Default port is `38038`. You can change port in application.yaml or with env variable `quarkus.http.port`
 
 ## Running the application in dev mode
 
