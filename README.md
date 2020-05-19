@@ -21,9 +21,9 @@ Request Body:
 
 | Field        | Type           | Description            |
 | ------------- |-------------| ---------------------|
-| `variables`      | array of JSON variable objects** | filds names and values |
-| `openingTag`     | String, length = 1 | symbol, that mark the beginning of field to fill with value |
-| `closingTag`     | String, length = 1 | symbol, that mark the end of field to fill with value |
+| `variables`      | Array of JSON variable objects** | Field's names and values |
+| `openingTag`     | String, length = 1 | Symbol, that marks the beginning of field |
+| `closingTag`     | String, length = 1 | Symbol, that marks the end of field |
 | `resultFilename`     | String, optional | name of the resulting file. The default response filename is "filled" + template filename. |
 
 example:
