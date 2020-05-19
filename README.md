@@ -26,7 +26,7 @@ Request Body:
 | `closingTag`     | String, length = 1 | Symbol, that marks the end of field |
 | `resultFilename`     | String, optional | name of the resulting file. The default response filename is "filled" + template filename. |
 
-example:
+fillData JSON example:
 
 ```
 {
